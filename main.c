@@ -42,7 +42,7 @@ int main() {
   lcd_gotoxy(1, 2);           // Go to the location 1,2 of lcd
   lcd_print("disco");         // Print the text
 
-  ctrl = (1 << set_hour | 1 << set_minute);
+  ctrl_lcd = (1 << set_hour | 1 << set_minute);
 
   TCCR1B = (1 << CS12 | 1 << WGM12);
   OCR1A = 15625 - 1;
