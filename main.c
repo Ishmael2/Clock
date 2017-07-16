@@ -50,22 +50,22 @@ int main() {
   sei();
 
   while (1) {
-    if (!(ctrl_lcd & (1 << set_hour))) {
-      hours++;
-      if (hours > 23) {
-        /* code */
-        hours = 0;
-      }
-      /* code */
-    }
-    if (!(ctrl_lcd & (1 << set_minute))) {
-      /* code */
-      minutes++;
-      if (minutes > 59) {
-        minutes = 0;
-      }
-    }
-    _delay_ms(250);
+    // if (!(ctrl_lcd & (1 << set_hour))) {
+    //   hours++;
+    //   if (hours > 23) {
+    //     /* code */
+    //     hours = 0;
+    //   }
+    //   /* code */
+    // }
+    // if (!(ctrl_lcd & (1 << set_minute))) {
+    //   /* code */
+    //   minutes++;
+    //   if (minutes > 59) {
+    //     minutes = 0;
+    //   }
+    // }
+    // _delay_ms(250);
   };
 
   return 0;
