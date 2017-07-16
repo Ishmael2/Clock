@@ -30,7 +30,7 @@ void lcd_gotoxy(unsigned char x, unsigned char y);
 void lcd_update_time(void);
 
 // Timer counter 1 compare match A interrupt service routine/interrupt handler
-ISR(TIMER0_COMPA_vect);
+ISR(TIMER1_COMPA_vect);
 
 int main() {
   DDRD = 0xFF; // Setting DDRD to output // setting for port D
@@ -42,7 +42,7 @@ int main() {
   lcd_gotoxy(1, 2);           // Go to the location 1,2 of lcd
   lcd_print("disco");         // Print the text
 
-  ctrl_lcd = (1 << set_hour | 1 << set_minute);
+  // ctrl_lcd = (1 << set_hour | 1 << set_minute);
 
   TCCR1B = (1 << CS12 | 1 << WGM12);
   OCR1A = 15625 - 1;
@@ -84,7 +84,7 @@ void lcd_update_time(void) {
 
   itoa(minutes / 10, temp, 10);
   lcd_print(temp);
-  itoa((minutes / 10), temp, 10);
+  itoa((minutes % 10), temp, 10);
   lcd_print(temp);
   lcd_print(":");
 
