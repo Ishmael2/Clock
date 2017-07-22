@@ -1,3 +1,5 @@
+// Counts for how long the machine has been running
+
 #define F_CPU 16000000UL
 
 #include <avr/interrupt.h>
@@ -10,17 +12,11 @@
 #define rw 1       // read/write signal pin 1
 #define rs 0       // register select signal pin 0
 
-// #define lcd_ctrl_port PORTC
-// #define lcd_ctrl_pin DDRC
-// #define set_day 5
-// #define set_hour 4
-// #define set_minute 3
-
 // Global variables declarations
-unsigned char hours = 23;
-unsigned char minutes = 59;
-unsigned char seconds = 59;
-unsigned char days = 5;
+unsigned char hours = 0;
+unsigned char minutes = 0;
+unsigned char seconds = 0;
+unsigned char days = 0;
 char time[] = "00:00:00:00";
 
 void lcd_command(unsigned char cmd);
@@ -52,68 +48,7 @@ int main() {
   TIMSK1 = 1 << OCIE1A;
   sei();
 
-  // Button control (hours)
-  DDRB &= ~(1 << PINB0); // Data Direction Register input PINC5
-  PORTB |= 1 << PINB0;   // Set PINC5 to a high reading
-
-  // Button code
-  int pressed = 0;
-  int pressed_confidence_level = 0;
-  int released_confidence_level = 0;
-
   while (1) {
-
-    // Hours button
-    if (bit_is_clear(PINB, 0)) {
-      pressed_confidence_level++;
-
-      // Register as button presssed if condition met
-      if (pressed_confidence_level > 500) {
-        // Toggle hours
-        if (pressed == 0) {
-          // PORTB ^= 1 << PINB0;
-          // PORTB ^= 1 << PINB2;
-          hours--;
-          if (hours < 0) {
-            /* code */
-            hours = 23;
-          }
-
-          pressed = 1;
-        }
-        pressed_confidence_level = 0;
-      }
-    } else {
-      released_confidence_level++;
-      // Register as button released if condition met
-      if (released_confidence_level > 500) {
-        pressed = 0;
-        released_confidence_level = 0;
-      }
-    }
-    // if (!(lcd_ctrl_pin & (1 << set_hour))) {
-    //   hours--;
-    //   if (hours < 0) {
-    //     /* code */
-    //     hours = 23;
-    //   }
-    //   /* code */
-    // }
-    // if (!(lcd_ctrl_pin & (1 << set_minute))) {
-    //   /* code */
-    //   minutes--;
-    //   if (minutes < 0) {
-    //     minutes = 59;
-    //   }
-    // }
-    //
-    // if (!(lcd_ctrl_pin & (1 << set_day))) {
-    //   days--;
-    //   if (days < 0) {
-    //     days = 5;
-    //   }
-    // }
-    _delay_ms(250);
   };
 
   return 0;
@@ -149,24 +84,24 @@ void lcd_update_time(void) {
 }
 
 ISR(TIMER1_COMPA_vect) {
-  seconds--;
+  seconds++;
 
-  if (seconds == 0) {
+  if (seconds == 60) {
     /* code */
-    seconds = 59;
-    minutes--;
+    seconds = 0;
+    minutes++;
   }
 
-  if (minutes == 0) {
+  if (minutes == 60) {
     /* code */
-    minutes = 59;
-    hours--;
+    minutes = 0;
+    hours++;
   }
 
-  if (hours == 0) {
+  if (hours > 23) {
     /* code */
-    hours = 23;
-    days--;
+    hours = 0;
+    days++;
   }
   lcd_update_time();
 }
