@@ -10,15 +10,18 @@
 #define rw 1       // read/write signal pin 1
 #define rs 0       // register select signal pin 0
 
-#define ctrl_lcd PORTC
-#define set_hour 3
-#define set_minute 4
+// #define lcd_ctrl_port PORTC
+// #define lcd_ctrl_pin DDRC
+// #define set_day 5
+// #define set_hour 4
+// #define set_minute 3
 
 // Global variables declarations
 unsigned char hours = 23;
 unsigned char minutes = 59;
 unsigned char seconds = 59;
-char time[] = "00:00:00";
+unsigned char days = 5;
+char time[] = "00:00:00:00";
 
 void lcd_command(unsigned char cmd);
 void lcd_init(void);
@@ -37,35 +40,80 @@ int main() {
   lcd_init();  // initialization of LCD function
   _delay_ms(30);
 
-  lcd_gotoxy(1, 1);           // Go to the location 1,1 of lcd
-  lcd_print("AVR-Tutorials"); // Print the text
-  lcd_gotoxy(1, 2);           // Go to the location 1,2 of lcd
-  lcd_print("disco");         // Print the text
+  lcd_gotoxy(1, 1);         // Go to the location 1,1 of lcd
+  lcd_print("dy hr mn sc"); // Print the text
+  lcd_gotoxy(1, 2);         // Go to the location 1,2 of lcd
+  lcd_print("disco");       // Print the text
 
-  // ctrl_lcd = (1 << set_hour | 1 << set_minute);
+  // lcd_ctrl_port = (1 << set_hour | 1 << set_minute | 1 << set_day);
 
   TCCR1B = (1 << CS12 | 1 << WGM12);
   OCR1A = 15625 - 1;
   TIMSK1 = 1 << OCIE1A;
   sei();
 
+  // Button control (hours)
+  DDRB &= ~(1 << PINB0); // Data Direction Register input PINC5
+  PORTB |= 1 << PINB0;   // Set PINC5 to a high reading
+
+  // Button code
+  int pressed = 0;
+  int pressed_confidence_level = 0;
+  int released_confidence_level = 0;
+
   while (1) {
-    // if (!(ctrl_lcd & (1 << set_hour))) {
-    //   hours++;
-    //   if (hours > 23) {
+
+    // Hours button
+    if (bit_is_clear(PINB, 0)) {
+      pressed_confidence_level++;
+
+      // Register as button presssed if condition met
+      if (pressed_confidence_level > 500) {
+        // Toggle hours
+        if (pressed == 0) {
+          // PORTB ^= 1 << PINB0;
+          // PORTB ^= 1 << PINB2;
+          hours--;
+          if (hours < 0) {
+            /* code */
+            hours = 23;
+          }
+
+          pressed = 1;
+        }
+        pressed_confidence_level = 0;
+      }
+    } else {
+      released_confidence_level++;
+      // Register as button released if condition met
+      if (released_confidence_level > 500) {
+        pressed = 0;
+        released_confidence_level = 0;
+      }
+    }
+    // if (!(lcd_ctrl_pin & (1 << set_hour))) {
+    //   hours--;
+    //   if (hours < 0) {
     //     /* code */
-    //     hours = 0;
+    //     hours = 23;
     //   }
     //   /* code */
     // }
-    // if (!(ctrl_lcd & (1 << set_minute))) {
+    // if (!(lcd_ctrl_pin & (1 << set_minute))) {
     //   /* code */
-    //   minutes++;
-    //   if (minutes > 59) {
-    //     minutes = 0;
+    //   minutes--;
+    //   if (minutes < 0) {
+    //     minutes = 59;
     //   }
     // }
-    // _delay_ms(250);
+    //
+    // if (!(lcd_ctrl_pin & (1 << set_day))) {
+    //   days--;
+    //   if (days < 0) {
+    //     days = 5;
+    //   }
+    // }
+    _delay_ms(250);
   };
 
   return 0;
@@ -75,6 +123,12 @@ int main() {
 void lcd_update_time(void) {
   unsigned char temp;
   lcd_gotoxy(1, 2);
+
+  itoa(days / 10, temp, 10);
+  lcd_print(temp);
+  itoa(days % 10, temp, 10);
+  lcd_print(temp);
+  lcd_print(":");
 
   itoa(hours / 10, temp, 10);
   lcd_print(temp);
@@ -109,10 +163,11 @@ ISR(TIMER1_COMPA_vect) {
     hours--;
   }
 
-  // if (hours > 23) {
-  //   /* code */
-  //   hours = 0;
-  // }
+  if (hours == 0) {
+    /* code */
+    hours = 23;
+    days--;
+  }
   lcd_update_time();
 }
 
