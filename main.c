@@ -15,9 +15,9 @@
 #define set_minute 4
 
 // Global variables declarations
-unsigned char hours = 0;
-unsigned char minutes = 0;
-unsigned char seconds = 0;
+unsigned char hours = 23;
+unsigned char minutes = 59;
+unsigned char seconds = 59;
 char time[] = "00:00:00";
 
 void lcd_command(unsigned char cmd);
@@ -95,24 +95,24 @@ void lcd_update_time(void) {
 }
 
 ISR(TIMER1_COMPA_vect) {
-  seconds++;
+  seconds--;
 
-  if (seconds == 60) {
+  if (seconds == 0) {
     /* code */
-    seconds = 0;
-    minutes++;
+    seconds = 59;
+    minutes--;
   }
 
-  if (minutes == 60) {
+  if (minutes == 0) {
     /* code */
-    minutes = 0;
-    hours++;
+    minutes = 59;
+    hours--;
   }
 
-  if (hours > 23) {
-    /* code */
-    hours = 0;
-  }
+  // if (hours > 23) {
+  //   /* code */
+  //   hours = 0;
+  // }
   lcd_update_time();
 }
 
