@@ -1,4 +1,4 @@
-// This code counts upwards from 99:24:60:60
+// This code counts upwards from 99:23:59:59
 
 #define F_CPU 16000000UL
 
@@ -13,10 +13,10 @@
 #define rs 0       // register select signal pin 0
 
 // Global variables declarations
-unsigned char hours = 0;
-unsigned char minutes = 0;
-unsigned char seconds = 0;
-unsigned char days = 0;
+unsigned char hours = 23;
+unsigned char minutes = 59;
+unsigned char seconds = 59;
+unsigned char days = 99;
 char time[] = "00:00:00:00";
 
 void lcd_command(unsigned char cmd);
@@ -84,24 +84,24 @@ void lcd_update_time(void) {
 }
 
 ISR(TIMER1_COMPA_vect) {
-  seconds++;
+  seconds--;
 
-  if (seconds == 60) {
+  if (seconds == 0) {
     /* code */
-    seconds = 0;
-    minutes++;
+    seconds = 59;
+    minutes--;
   }
 
-  if (minutes == 60) {
+  if (minutes == 0) {
     /* code */
-    minutes = 0;
-    hours++;
+    minutes = 59;
+    hours--;
   }
 
-  if (hours > 23) {
+  if (hours == 0) {
     /* code */
-    hours = 0;
-    days++;
+    hours = 23;
+    days--;
   }
   lcd_update_time();
 }
