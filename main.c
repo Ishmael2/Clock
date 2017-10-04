@@ -1,4 +1,4 @@
-// Counts for how long the machine has been running
+// This code counts upwards from 00:00:00:00
 
 #define F_CPU 16000000UL
 
