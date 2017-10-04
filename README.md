@@ -1,6 +1,6 @@
 # Clock
 
-This is a clock that counts upwards. Built using an atmega328p and lcd 1602A screen. The code runs on C. It shows the days, hours, minutes and seconds
+This is a clock that counts downwards from 99 days, 23 hours, 59 hours and 59 seconds. Built using an atmega328p and lcd 1602A screen. The code runs on C. It shows the days, hours, minutes and seconds
 
 ## Getting Started
 
