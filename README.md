@@ -21,6 +21,10 @@ Set up the circuit as shown in the figure below
 	<img src="./Assets/schematic.png" />
 </p>
 
+## Video Example
+
+A video of the code running
+
 ### Prerequisite
 
 In this case I was using the terminal from linux
