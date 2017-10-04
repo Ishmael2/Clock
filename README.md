@@ -11,3 +11,4 @@ To check out the functionality for counting downwards
 ```
 git checkout countDown
 ```
+Or you can toggle the branch from master to countUp or countDown from the github tab
