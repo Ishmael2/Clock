@@ -25,7 +25,7 @@ Set up the circuit as shown in the figure below
 
 A video of the code running
 
-<a href="http://www.youtube.com/watch?feature=player_embedded&v=YOUTUBE_VIDEO_ID_HERE
+<a href="http://www.youtube.com/watch?feature=player_embedded&v=gOIRP3hROwc
 " target="_blank"><img src="./Assets/IMG-20171004-WA0001.jpg" 
 alt="clock counting upwards" width="240" height="180" border="10" /></a>
 
