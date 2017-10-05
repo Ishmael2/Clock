@@ -1,4 +1,4 @@
-// This code counts upwards from 99:23:59:59
+// This code counts downwards from 99:23:59:59
 
 #define F_CPU 16000000UL
 
